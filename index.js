@@ -1,8 +1,11 @@
 // TODO: zoom
 const els = {
     'num_points': document.querySelector('#num-points'),
+    'show_all': document.querySelector('#show-all'),
 }
+let colors;
 let history = [];
+let polygon;
 
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
@@ -18,6 +21,22 @@ function setup(){
             els.num_points.value = els.num_points.min;
         reset();
     });
+    els.show_all.addEventListener('input', redraw);
+    document.querySelector('canvas').addEventListener('click', go_forward);
+    colors = [
+        color(255, 0, 0),
+        color(255, 128, 0),
+        color(255, 255, 0),
+        color(128, 255, 0),
+        color(0, 255, 0),
+        color(0, 255, 128),
+        color(0, 255, 255),
+        color(0, 128, 255),
+        color(0, 0, 255),
+        color(128, 0, 255),
+        color(255, 0, 255),
+        color(255, 0, 128)
+    ];
     reset();
     stroke(255);
     noFill();
@@ -35,13 +54,25 @@ function keyPressed(){
 function draw(){
     translate(windowWidth / 2, windowHeight / 2);
     background(0);
-    draw_polygon(polygon);
-    let prev = previous();
-    if(prev !== null){
+    if(els.show_all.checked){
         push();
-        stroke('red');
-        draw_polygon(prev);
+        let i;
+        for(i = 0; i < history.length; i++){
+            stroke(colors[i % colors.length])
+            draw_polygon(history[i]);
+        }
+        stroke(colors[i % colors.length])
+        draw_polygon(polygon);
         pop();
+    }else{
+        let prev = previous();
+        if(prev !== null){
+            push();
+            stroke('red');
+            draw_polygon(prev);
+            pop();
+        }
+        draw_polygon(polygon);
     }
 }
 

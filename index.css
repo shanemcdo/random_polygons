@@ -47,6 +47,11 @@ body{
     display: block;
 }
 
+.checkboxes{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+}
+
 .hidden{
     display: none !important;
 }
