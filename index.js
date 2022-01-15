@@ -159,12 +159,11 @@ function update_make_polygon_fn(){
             make_polygon_fn = () => {
                 let size = parseInt(els.num_points.value);
                 let result = [];
-                let radius = min(windowWidth, windowHeight) / 2;
                 for(let i = 0; i < size; i++){
                     let theta = i / size * 360;
                     result.push(createVector(
-                        cos(theta) * radius,
-                        sin(theta) * radius
+                        cos(theta) * windowWidth / 2,
+                        sin(theta) * windowHeight / 2
                     ));
                 }
                 return result;
@@ -172,7 +171,6 @@ function update_make_polygon_fn(){
             break;
         case 'radial-random':
             make_polygon_fn = () => {
-                console.log('radial-random');
                 let size = parseInt(els.num_points.value);
                 let result = [];
                 let radius = min(windowWidth, windowHeight) / 2;
