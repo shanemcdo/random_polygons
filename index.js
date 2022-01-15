@@ -87,28 +87,6 @@ function random_vector(){
     );
 }
 
-function make_random_polygon(){
-    let size = parseInt(els.num_points.value);
-    let result = [];
-    for(let i = 0; i < size; i++)
-        result.push(random_vector());
-    return result;
-}
-
-function make_regular_polygon(){
-    let size = parseInt(els.num_points.value);
-    let result = [];
-    let radius = min(windowWidth, windowHeight) / 2;
-    for(let i = 0; i < size; i++){
-        let theta = i / size * 360;
-        result.push(createVector(
-            cos(theta) * radius,
-            sin(theta) * radius
-        ));
-    }
-    return result;
-}
-
 function make_next_polygon(points){
     let result = [];
     let prev = points[points.length - 1];
@@ -163,11 +141,61 @@ function reset(){
 function update_make_polygon_fn(){
     switch(els.polygon_type.value){
         case 'regular':
-            make_polygon_fn = make_regular_polygon
+            make_polygon_fn = () => {
+                let size = parseInt(els.num_points.value);
+                let result = [];
+                let radius = min(windowWidth, windowHeight) / 2;
+                for(let i = 0; i < size; i++){
+                    let theta = i / size * 360;
+                    result.push(createVector(
+                        cos(theta) * radius,
+                        sin(theta) * radius
+                    ));
+                }
+                return result;
+            }
+            break;
+        case 'regular-ish':
+            make_polygon_fn = () => {
+                let size = parseInt(els.num_points.value);
+                let result = [];
+                let radius = min(windowWidth, windowHeight) / 2;
+                for(let i = 0; i < size; i++){
+                    let theta = i / size * 360;
+                    result.push(createVector(
+                        cos(theta) * radius,
+                        sin(theta) * radius
+                    ));
+                }
+                return result;
+            }
+            break;
+        case 'radial-random':
+            make_polygon_fn = () => {
+                console.log('radial-random');
+                let size = parseInt(els.num_points.value);
+                let result = [];
+                let radius = min(windowWidth, windowHeight) / 2;
+                for(let i = 0; i < size; i++){
+                    let theta = i / size * 360;
+                    let r = random(-radius, radius);
+                    result.push(createVector(
+                        cos(theta) * r,
+                        sin(theta) * r
+                    ));
+                }
+                return result;
+            }
             break;
         case 'random':
         default:
-            make_polygon_fn = make_random_polygon;
+            make_polygon_fn = () => {
+                let size = parseInt(els.num_points.value);
+                let result = [];
+                for(let i = 0; i < size; i++)
+                    result.push(random_vector());
+                return result;
+            }
             break;
     }
     reset();
