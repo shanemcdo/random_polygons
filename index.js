@@ -11,7 +11,7 @@ function setup(){
     stroke(255);
     noFill();
     els.num_points.addEventListener('input', ()=>{
-        let val = parseInt(els.num_points.value || ' ');
+        let val = parseInt(els.num_points.value || '0');
         if(val > els.num_points.max)
             els.num_points.value = els.num_points.max;
         else if(val < els.num_points.min)
