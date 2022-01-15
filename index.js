@@ -3,6 +3,7 @@ const els = {
     'num_points': document.querySelector('#num-points'),
     'show_all': document.querySelector('#show-all'),
     'polygon_type': document.querySelector('#polygon-type'),
+    'scale': document.querySelector('#scale-slider'),
 }
 let colors;
 let history = [];
@@ -26,6 +27,7 @@ function setup(){
     });
     els.show_all.addEventListener('input', redraw);
     els.polygon_type.addEventListener('input', update_make_polygon_fn);
+    els.scale.addEventListener('input', redraw);
     document.querySelector('canvas').addEventListener('click', go_forward);
     colors = [
         color(255, 0, 0),
@@ -57,6 +59,7 @@ function keyPressed(){
 
 function draw(){
     translate(windowWidth / 2, windowHeight / 2);
+    scale(els.scale.value);
     background(0);
     if(els.show_all.checked){
         push();
