@@ -1,3 +1,7 @@
+const els = {
+    'num_points': document.querySelector('#num-points'),
+}
+
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
 }
@@ -6,6 +10,15 @@ function setup(){
     createCanvas(windowWidth, windowHeight);
     stroke(255);
     noFill();
+    els.num_points.addEventListener('input', ()=>{
+        let val = parseInt(els.num_points.value || ' ');
+        if(val > els.num_points.max)
+            els.num_points.value = els.num_points.max;
+        else if(val < els.num_points.min)
+            els.num_points.value = els.num_points.min;
+        
+        redraw();
+    });
     noLoop();
 }
 
@@ -22,9 +35,10 @@ function random_vector(){
     );
 }
 
-function make_random_polygon(num_sides = 10){
+function make_random_polygon(){
+    let size = parseInt(els.num_points.value);
     let result = [];
-    for(let i = 0; i < num_sides; i++)
+    for(let i = 0; i < size; i++)
         result.push(random_vector());
     return result;
 }
