@@ -2,10 +2,12 @@
 const els = {
     'num_points': document.querySelector('#num-points'),
     'show_all': document.querySelector('#show-all'),
+    'polygon_type': document.querySelector('#polygon-type'),
 }
 let colors;
 let history = [];
 let polygon;
+let make_polygon_fn;
 
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
@@ -13,6 +15,7 @@ function windowResized(){
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
+    update_make_polygon_fn();
     els.num_points.addEventListener('input', ()=>{
         let val = parseInt(els.num_points.value || '0');
         if(val > els.num_points.max)
@@ -22,6 +25,7 @@ function setup(){
         reset();
     });
     els.show_all.addEventListener('input', redraw);
+    els.polygon_type.addEventListener('input', update_make_polygon_fn);
     document.querySelector('canvas').addEventListener('click', go_forward);
     colors = [
         color(255, 0, 0),
@@ -37,7 +41,7 @@ function setup(){
         color(255, 0, 255),
         color(255, 0, 128)
     ];
-    reset();
+    angleMode(DEGREES);
     stroke(255);
     noFill();
     noLoop();
@@ -91,6 +95,20 @@ function make_random_polygon(){
     return result;
 }
 
+function make_regular_polygon(){
+    let size = parseInt(els.num_points.value);
+    let result = [];
+    let radius = min(windowWidth, windowHeight) / 2;
+    for(let i = 0; i < size; i++){
+        let theta = i / size * 360;
+        result.push(createVector(
+            cos(theta) * radius,
+            sin(theta) * radius
+        ));
+    }
+    return result;
+}
+
 function make_next_polygon(points){
     let result = [];
     let prev = points[points.length - 1];
@@ -137,7 +155,20 @@ function go_back(){
 }
 
 function reset(){
-    polygon = make_random_polygon();
+    polygon = make_polygon_fn();
     history = [];
     redraw();
+}
+
+function update_make_polygon_fn(){
+    switch(els.polygon_type.value){
+        case 'regular':
+            make_polygon_fn = make_regular_polygon
+            break;
+        case 'random':
+        default:
+            make_polygon_fn = make_random_polygon;
+            break;
+    }
+    reset();
 }

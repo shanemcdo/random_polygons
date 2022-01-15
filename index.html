@@ -13,10 +13,16 @@
             <div class=dropdown-content>
                 <label for="num-points">Number of points</label>
                 <input type="number" name="num-points" id="num-points" value=10 min=3 max=100 />
+                <label for="polygon-type"></label>
+                <select name="polygon-type" id="polygon-type">
+                    <option value="random">Random</option>
+                    <option value="regular">Regular</option>
+                </select>
                 <div class=checkboxes>
                     <label for="show-all">Show all</label>
                     <input type="checkbox" name="show-all" id="show-all" />
                 </div>
+                <button onclick="reset()">Reset</button>
             </div>
         </div>
     </body>

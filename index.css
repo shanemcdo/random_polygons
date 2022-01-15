@@ -23,6 +23,7 @@ body{
 
 .dropdown-icon {
     display: block;
+    user-select: none;
 }
 
 .dropdown-content {
