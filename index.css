@@ -56,3 +56,17 @@ body{
 .hidden{
     display: none !important;
 }
+
+#source{
+    display: block;
+}
+
+.link{
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.link:hover,
+.link:focus{
+    text-decoration: underline;
+}

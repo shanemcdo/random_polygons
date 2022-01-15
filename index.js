@@ -155,6 +155,7 @@ function update_make_polygon_fn(){
                 return result;
             }
             break;
+
         case 'regular-ish':
             make_polygon_fn = () => {
                 let size = parseInt(els.num_points.value);
@@ -169,6 +170,7 @@ function update_make_polygon_fn(){
                 return result;
             }
             break;
+
         case 'radial-random':
             make_polygon_fn = () => {
                 let size = parseInt(els.num_points.value);
@@ -185,8 +187,8 @@ function update_make_polygon_fn(){
                 return result;
             }
             break;
+
         case 'random':
-        default:
             make_polygon_fn = () => {
                 let size = parseInt(els.num_points.value);
                 let result = [];
@@ -195,6 +197,9 @@ function update_make_polygon_fn(){
                 return result;
             }
             break;
+        default:
+            console.log('something went wrong');
+            throw new Error('The value of #polygon-type is unexpepected');
     }
     reset();
 }
