@@ -1,3 +1,4 @@
+// TODO: zoom
 const els = {
     'num_points': document.querySelector('#num-points'),
 }
