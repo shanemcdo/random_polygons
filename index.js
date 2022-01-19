@@ -6,6 +6,7 @@ const els = {
     'scale': document.querySelector('#scale-slider'),
     'increment_count': document.querySelector('#increment-count'),
     'autoclicker': document.querySelector('#autoclicker'),
+    'autoclicker_delay': document.querySelector('#autoclicker-delay'),
     'stroke_weight': document.querySelector('#stroke-weight'),
 }
 let colors;
@@ -23,14 +24,14 @@ function setup(){
     createCanvas(windowWidth, windowHeight);
     offset = createVector(0, 0);
     update_make_polygon_fn();
-    els.num_points.addEventListener('input', ()=>{
+    els.num_points.addEventListener('change', ()=>{
         validate_input(els.num_points);
         reset();
     });
     els.show_all.addEventListener('input', redraw);
     els.polygon_type.addEventListener('input', update_make_polygon_fn);
     els.scale.addEventListener('input', redraw);
-    els.increment_count.addEventListener('input', ()=>{
+    els.increment_count.addEventListener('change', ()=>{
         validate_input(els.increment_count);
         let val = parseInt(els.increment_count.value);
         while(history.length > val)
@@ -44,6 +45,12 @@ function setup(){
             start_autoclicker();
         else
             stop_autoclicker();
+    });
+    els.autoclicker_delay.addEventListener('change', ()=>{
+        validate_input(els.autoclicker_delay);
+        stop_autoclicker();
+        if(els.autoclicker.checked)
+            start_autoclicker();
     });
     els.stroke_weight.addEventListener('input', redraw);
     document.querySelector('canvas').addEventListener('click', go_forward);
@@ -91,9 +98,6 @@ function keyPressed(){
         case 76: // l
             offset.x -= 50 * els.scale.value;
             redraw();
-            break;
-        default:
-            console.log(keyCode);
             break;
     }
 }
@@ -265,7 +269,7 @@ function update_make_polygon_fn(){
 function start_autoclicker(){
     autoclicker_interval = setInterval(()=>{
         go_forward();
-    }, 200);
+    }, parseInt(els.autoclicker_delay.value));
 }
 
 function stop_autoclicker(){
