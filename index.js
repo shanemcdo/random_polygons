@@ -117,9 +117,10 @@ function make_next_polygon(points){
 function draw_polygon(points){
     beginShape();
     for(let pos of points){
-        vertex(pos.x, pos.y);
         push();
-        strokeWeight(10);
+        strokeWeight(1 / els.scale.value);
+        vertex(pos.x, pos.y);
+        strokeWeight(10 / els.scale.value);
         point(pos.x, pos.y)
         pop();
     }
