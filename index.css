@@ -70,3 +70,9 @@ body{
 .link:focus{
     text-decoration: underline;
 }
+
+label,
+input{
+    display: block;
+    width: 90%;
+}

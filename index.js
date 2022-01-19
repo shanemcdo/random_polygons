@@ -4,11 +4,14 @@ const els = {
     'show_all': document.querySelector('#show-all'),
     'polygon_type': document.querySelector('#polygon-type'),
     'scale': document.querySelector('#scale-slider'),
+    'increment_count': document.querySelector('#increment-count'),
+    'autoclicker': document.querySelector('#autoclicker'),
 }
 let colors;
 let history = [];
 let polygon;
 let make_polygon_fn;
+let autoclicker_interval = null;
 
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
@@ -18,16 +21,27 @@ function setup(){
     createCanvas(windowWidth, windowHeight);
     update_make_polygon_fn();
     els.num_points.addEventListener('input', ()=>{
-        let val = parseInt(els.num_points.value || '0');
-        if(val > els.num_points.max)
-            els.num_points.value = els.num_points.max;
-        else if(val < els.num_points.min)
-            els.num_points.value = els.num_points.min;
+        validate_input(els.num_points);
         reset();
     });
     els.show_all.addEventListener('input', redraw);
     els.polygon_type.addEventListener('input', update_make_polygon_fn);
     els.scale.addEventListener('input', redraw);
+    els.increment_count.addEventListener('input', ()=>{
+        validate_input(els.increment_count);
+        let val = parseInt(els.increment_count.value);
+        while(history.length > val)
+            go_back(false);
+        while(history.length < val)
+            go_forward(false);
+        redraw();
+    });
+    els.autoclicker.addEventListener('input', ()=>{
+        if(els.autoclicker.checked)
+            start_autoclicker();
+        else
+            stop_autoclicker();
+    });
     document.querySelector('canvas').addEventListener('click', go_forward);
     colors = [
         color(255, 0, 0),
@@ -122,16 +136,20 @@ function previous(){
     return history[history.length - 1];
 }
 
-function go_forward(){
+function go_forward(should_redraw = true){
     history.push(polygon);
     polygon = make_next_polygon(polygon);
-    redraw();
+    els.increment_count.value = history.length;
+    if(should_redraw)
+        redraw();
 }
 
-function go_back(){
+function go_back(should_redraw = true){
     if(previous() !== null){
         polygon = history.pop();
-        redraw();
+        els.increment_count.value = history.length;
+        if(should_redraw)
+            redraw();
     }
 }
 
@@ -139,6 +157,14 @@ function reset(){
     polygon = make_polygon_fn();
     history = [];
     redraw();
+}
+
+function validate_input(element){
+    let val = parseInt(element.value || '0');
+    if(val > element.max)
+        element.value = element.max;
+    else if(val < element.min)
+        element.value = element.min;
 }
 
 function update_make_polygon_fn(){
@@ -205,4 +231,15 @@ function update_make_polygon_fn(){
             throw new Error('The value of #polygon-type is unexpepected');
     }
     reset();
+}
+
+function start_autoclicker(){
+    autoclicker_interval = setInterval(()=>{
+        go_forward();
+    }, 200);
+}
+
+function stop_autoclicker(){
+    if(autoclicker_interval != null)
+        clearInterval(autoclicker_interval)
 }
