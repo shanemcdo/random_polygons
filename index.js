@@ -6,6 +6,7 @@ const els = {
     'scale': document.querySelector('#scale-slider'),
     'increment_count': document.querySelector('#increment-count'),
     'autoclicker': document.querySelector('#autoclicker'),
+    'stroke_weight': document.querySelector('#stroke-weight'),
 }
 let colors;
 let history = [];
@@ -42,6 +43,7 @@ function setup(){
         else
             stop_autoclicker();
     });
+    els.stroke_weight.addEventListener('input', redraw);
     document.querySelector('canvas').addEventListener('click', go_forward);
     colors = [
         color(255, 0, 0),
@@ -116,11 +118,11 @@ function make_next_polygon(points){
 
 function draw_polygon(points){
     beginShape();
+    strokeWeight(els.stroke_weight.value);
     for(let pos of points){
-        push();
-        strokeWeight(1 / els.scale.value);
         vertex(pos.x, pos.y);
-        strokeWeight(10 / els.scale.value);
+        push();
+        strokeWeight(10 * els.stroke_weight.value);
         point(pos.x, pos.y)
         pop();
     }
