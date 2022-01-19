@@ -13,6 +13,7 @@ let history = [];
 let polygon;
 let make_polygon_fn;
 let autoclicker_interval = null;
+let offset;
 
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
@@ -20,6 +21,7 @@ function windowResized(){
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
+    offset = createVector(0, 0);
     update_make_polygon_fn();
     els.num_points.addEventListener('input', ()=>{
         validate_input(els.num_points);
@@ -66,15 +68,38 @@ function setup(){
 }
 
 function keyPressed(){
-    if(keyCode === 32 || keyCode === RIGHT_ARROW){
-        go_forward();
-    }else if(keyCode === LEFT_ARROW){
-        go_back();
+    switch(keyCode){
+        case 32:
+        case RIGHT_ARROW:
+            go_forward();
+            break;
+        case LEFT_ARROW:
+            go_back();
+            break;
+        case 72: // h
+            offset.x += 50 * els.scale.value;
+            redraw();
+            break;
+        case 74: // j
+            offset.y -= 50 * els.scale.value;
+            redraw();
+            break;
+        case 75: // k
+            offset.y += 50 * els.scale.value;
+            redraw();
+            break;
+        case 76: // l
+            offset.x -= 50 * els.scale.value;
+            redraw();
+            break;
+        default:
+            console.log(keyCode);
+            break;
     }
 }
 
 function draw(){
-    translate(windowWidth / 2, windowHeight / 2);
+    translate(windowWidth / 2 + offset.x, windowHeight / 2 + offset.y);
     scale(els.scale.value);
     background(0);
     if(els.show_all.checked){
@@ -159,6 +184,7 @@ function go_back(should_redraw = true){
 function reset(){
     polygon = make_polygon_fn();
     history = [];
+    offset = createVector(0, 0);
     redraw();
 }
 
