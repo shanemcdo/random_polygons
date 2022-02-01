@@ -26,18 +26,14 @@ function setup(){
     update_make_polygon_fn();
     els.num_points.addEventListener('change', ()=>{
         validate_input(els.num_points);
-        reset();
+        regenerate();
     });
     els.show_all.addEventListener('input', redraw);
     els.polygon_type.addEventListener('input', update_make_polygon_fn);
     els.scale.addEventListener('input', redraw);
     els.increment_count.addEventListener('change', ()=>{
         validate_input(els.increment_count);
-        let val = parseInt(els.increment_count.value);
-        while(history.length > val)
-            go_back(false);
-        while(history.length < val)
-            go_forward(false);
+        set_increment();
         redraw();
     });
     els.autoclicker.addEventListener('input', ()=>{
@@ -189,6 +185,15 @@ function reset(){
     polygon = make_polygon_fn();
     history = [];
     offset = createVector(0, 0);
+    els.increment_count.value = 0
+    redraw();
+}
+
+function regenerate(){
+    polygon = make_polygon_fn();
+    history = [];
+    offset = createVector(0, 0);
+    set_increment();
     redraw();
 }
 
@@ -263,7 +268,7 @@ function update_make_polygon_fn(){
             console.log('something went wrong');
             throw new Error('The value of #polygon-type is unexpepected');
     }
-    reset();
+    regenerate();
 }
 
 function start_autoclicker(){
@@ -275,4 +280,12 @@ function start_autoclicker(){
 function stop_autoclicker(){
     if(autoclicker_interval != null)
         clearInterval(autoclicker_interval)
+}
+
+function set_increment(){
+    let val = parseInt(els.increment_count.value);
+    while(history.length > val)
+        go_back(false);
+    while(history.length < val)
+        go_forward(false);
 }
